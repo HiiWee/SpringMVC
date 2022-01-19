@@ -1,0 +1,161 @@
+< ------------------------------------------------------------ Spring MVC ------------------------------------------------------------ >
+
+* Spring을 사용하지 않고 Tomcat(Tomcat Configuration)을 이용해 웹개발 가능(Servlet, JSP)
+	> 이때는 web.xml을 사용 : 사용할 라이브러리 인스턴스화(Mybatis, Tiles) 등등의 설정
+	> Spring을 사용하겠다 하면 이곳에 Spring을 얹음(Spring Dispatcher) : Spring Web 개발시 Spring Dispatcher 라이브러리를 기반으로 사용
+
+* Spring Dispatcher
+	> Controller의 공통분모를 모아놓은 Front Controller를 Spring에서 제공해줌 : 그게 Spring MVC다.
+	> Spring MVC를 쓰겠다면 Spring이 거의 모든것을 커버함 -> Spring을 쓰기위한 또다른 설정이 필요함 : Spring Configuration
+
+* Spring Web : Spring Configuration이 늘어남
+	> 톰캣의 web.xml 설정에서 옮겨짐 : Spring Config가 라이브러리 기타 등등을 관리하게 됨 (Mybatis, Tiles등)
+	> 또한 Spring Configuration에는 일반적으로 자신만의 설정인 Servlet, Service, Security설정들이 더 추가 됨
+
+* 결국 톰캣, 톰캣설정, 스프링, 스프링 설정 하는 방법들을 알아야함
+	> Spring 버전이 변화하며 설정방법도 변화하기 시작함
+		> XML, Annotation, Java등 다양한 방법 존재
+
+* 최근에는 이러한 설정에 대한것들을 도와줄 수 있는 Spring Boot가 나옴
+	> Spring MVC를 대신하기보단 설정에 대한것들을 모아서 편하게 해줄 수 있는 부가적인 프레임워크
+
+* Spring에 Spring Boot를 얹어서 사용하게 되면 기존의 복잡한 설정을 피할수 있게 된다.
+	> Stater Configuration을 필요로하는 각각의 설정들을 한번에 묶어서 라이브러리로 가지고 있다 -> 설정에 대한 라이브러리를 일일이 설정할 필요가 없다.
+	> 최대한 설정을 줄이고 설정파일 하나만 둠 applicaiton.properties(단순 텍스트파일) 혹은 YAML(Json같은 형태의 표기법파일)의 설정파일 중 골라서 사용함 (주로 application.properties사용)
+
+* Spring Boot를 사용하게 되면 결국 설정에 대한 부분이 크게 줄어든다.
+
+
+
+
+
+< ------------------------------------------------------------ Spring MVC란 ------------------------------------------------------------ >
+* Spring을 이용해서 웹 개발을 해보자
+
+* 기존 MVC model2 방식
+	> Controller : servlet, View : jsp 로 나눔 forwarding을 dispatcher를 이용해 구현함
+	> 하지만 위와같이 되며 모든 Controller는 Dispatcher를 가지게 됨 --> 비효율적
+
+* 기존 MVC model2 방식의 변화 : Dispatcher를 집중화 한 후의 모델
+	> 순수하게 Controller의 기능만 구현시킴 --> 이것은 Servlet이 아니라 일반적인 자바 클래스(POJO:Plain Old Java Object)로 구현함
+	> 기존 Controller로 이용하던 Servlet은 dispatcher기능만 남아있다 --> 이는 forwarding하는 기능이므로 거의 기능이 똑같음 --> 하나만 남김(디스패처의 집중화)
+	> 사용자의 요청을 컨트롤러에 전달하고 요청한 결과물을 받아서 다시 view에게 전달함 (중간매개의 역할) 매우 중요한 역할
+
+* dispatcher의 역할 
+	> 사용자의 요청을 받는다는것의 의미 : 단순 요청 라우팅이아니라 사용자 입력을 쉽게 컨트롤러로 전달해줌
+	> 그렇게되면 컨트롤러는 servlet api를 이용해 파라미터를 받아오는 등의 서블릿의 기능을 차단해주는 역할
+	> Controller에 기본적 사용할 수 있는 String, int등으로 전달해줌 혹은 객체화된 데이터로 담아서 줄 수 도있다.
+	> 결국 Controller에선 Servlet 라이브러리를 하나도 사용하지 않고도 입력을 처리하게 되거나,
+	  Controller가 데이터를 마련해 view로 전달하려 해도 dispatcher기능이 없으므로 디스패처가 컨트롤러에게 요청을 다시 돌려받게 되는데
+	  그 때 Controller에서 어떤 view 페이지가 필요하다는 view페이지 정보만 알려주면 디스패처가 view페이지를 호출하게됨 따라서 서블릿 기능을 dispatcher로 한정한다.
+	> 이게 바로 dispatcher를 따로 분리하는 이유
+
+* 따라서 dispatcher는 서블릿, 톰캣, was라고 하는것과 Controller와 결합력을 낮추게 하며 컨트롤러를 혹시 다른 환경에서도 쓸수있게 할수있다.
+
+* 결국 front controller(dispatcher)를 만드는것이 중요하며 만드는 것을 Spring이 제공함
+	> Spring이 제공하는 front controller 라이브러리를 이용해 Controller를 만듦
+	> front controller를 잘 만들게 되면 톰캣과 이별 할 수 도있게 웹개발 할 수 있다.
+
+* Dispatcher역할을 가지고 있는 Dispatcher servlet(Spring 제공하는 기능)에 여러 URL이 옴
+	> 모든 URL을 받아서 처리해야 한다.
+	> 모든 URL요청이 오게됨 --> 그것을 적절히 알맞은 Controller에게 배분해야함 --> URL에 대한 정보를 어떤 Controller가 처리할지 가지고 있어야한다.
+	> 따라서 Spring이 제공하는 Dispatcher 관련된 front controller 라이브러리 사용시 설정파일이 필요하다.
+		> 과거엔 url매핑, 어노테이션으로 설정했으나 그 내용이 *-servlet.xml로 옮겨진다.
+		> 즉 web.xml은 모든 url이 dispatcher servlet로 향하게 함,
+		  이것을 알맞은 Controller에게 배분하기 위해 dispatcher servlet 설정파일에서 매핑 정보를 쓰게된다(*-servlet.xml)
+	> 어떻게 보면 톰캣의 매핑정보가 스프링위로 올라간것 뿐으로 보인다. 하지만 결합력을 낮추는 부분에서 장점이 있음
+
+여담 : 과거에는 Dispatcher Servlet을 직접 만듦 --> 요즘은 Spring것을 사용 --> Spring에 종속되는 문제 야기
+	> 방법론으로 발전시켜나가는게 바람직해보임 --> 가능하면 개별적으로 만들어가며 실력을 키우는것도 좋아보입니다.
+
+* Controller는 반환할 때 model, view의 정보를 전달함 --> dispatcher가 요청시 반환받은 두 개의 값을 가지고 view를 찾아서 관련된 데이터(Model)을 전달함
+	> 즉 Spring MVC는 dispatcher servlet 라이브러리를 사용하는 것이다.
+
+
+
+
+
+< ------------------------------------------------------------ 실습환경 준비하기 ------------------------------------------------------------ >
+* spring.io에 Spring Tools 4 for Eclipse를 다운받는다.
+* apache 9 다운로드 (Spring Boot는 내장 톰캣이 존재해서 따로 다운받을 필요 없음)
+
+* 이후 다운받은 Spring Tools 4 for Eclipse를 압축풀고 내부에 contents 알집을 압축을 푼다
+	> sts-4.13.0.RELEASE를 잘라내서 tools 파일로 옮김
+
+* 이후 SpringToolSuite4.exe파일을 실행한다.
+
+
+
+
+< ------------------------------------------------------------ 메이븐을 이용한 기본 웹 프로젝트 생성하기 ------------------------------------------------------------ >
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
