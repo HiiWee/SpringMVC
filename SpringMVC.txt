@@ -113,11 +113,24 @@
 
 
 
+< ------------------------------------------------------------ Dispatcher Servlet 라이브러리 설정하기 ------------------------------------------------------------ >
+* Spring Dispatcher를 Front 컨트롤러로 설정해야함.
+
+* 기존에 컨트롤러와 디스패처를 같이 사용했지만 이것을 분리해 디스패처에 서블릿관련 코드를 두고 컨트롤러는 POJO 클래스로 만들기로 함
+
+* 디스패처 서블릿은 DispatcherServlet.class를 이용한다. 이것을 다운로드 받아야함
+	> 이전에 구글 tomcat api를 받아온것은 Global Repo -> Local Repo로 받아온것이다.
+	> 따라서 직접 Global Repo에서 받아올 수 있다. 다만 Rebuild Index로 업데이트 이후 검색해서 사용가능(pom.xml:Dependencies -> Add -> 검색
+		> 이렇게 되면 검색한것을 원격에서 가져와서 로컬로 저장함
+
+	> 두번째로 tomcat api 검색후 Spring web MVC 검색해서 복사해서 dependency 입력
 
 
+* Maven Dependencies : Local Repo에 있는 내용중 참조하고 있는 라이브러리 목록을 보여줌
+	> 여기서 Spring-webmvc -> org.springframework.web.servlet -> DispatcherServlet.class를 우클릭후 Copy Qualified Name 클릭
+	> 이렇게하면 패키지명과 클래스명을 한번에 받아올 수 있다.
 
-
-
+* 위에서 복사한 내용(front controller 역할을 하는 서블릿 클래스)을 web.xml에서 설정한다.
 
 
 
