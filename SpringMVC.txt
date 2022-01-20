@@ -43,7 +43,7 @@
 
 * dispatcher의 역할 
 	> 사용자의 요청을 받는다는것의 의미 : 단순 요청 라우팅이아니라 사용자 입력을 쉽게 컨트롤러로 전달해줌
-	> 그렇게되면 컨트롤러는 servlet api를 이용해 파라미터를 받아오는 등의 서블릿의 기능을 차단해주는 역할
+	> 그렇게되면 dispatcher는 servlet api를 이용해 파라미터를 받아오는 등의 서블릿의 기능을 차단해주는 역할
 	> Controller에 기본적 사용할 수 있는 String, int등으로 전달해줌 혹은 객체화된 데이터로 담아서 줄 수 도있다.
 	> 결국 Controller에선 Servlet 라이브러리를 하나도 사용하지 않고도 입력을 처리하게 되거나,
 	  Controller가 데이터를 마련해 view로 전달하려 해도 dispatcher기능이 없으므로 디스패처가 컨트롤러에게 요청을 다시 돌려받게 되는데
@@ -88,10 +88,27 @@
 
 
 < ------------------------------------------------------------ 메이븐을 이용한 기본 웹 프로젝트 생성하기 ------------------------------------------------------------ >
+* Create new Spring Starter Project == Spring Boot 이용
+* 우리는 legacy Spring 이용 웹 프로젝트를 Maven 기반으로 생성해야함 --> Java EE 툴 설치
 
+* 메이븐 프로젝트 생성
+	> Group id : com.hoseok
+	> Artifact id : webPrj
+	> Packaging : war
 
+* pom.xml에 web.xml이 없다는 오류가 발생하므로 apache tomcat에 ROOT/WEB-INF 폴더에서 web.xml을 가져옴
+	> 추가로 오류 발생시 --> maven-war-plugin을 3버전 이상으로 임의로 플러그인 추가해줌
 
+* JDK 버전 올리기
+	> 1. pom.xml -> overview -> Properties : name=maven.compiler.source, value=1.8 추가 그리고 name=maven.compiler.target, value=1.8로 등록함 이후 update project
 
+* JSP 파일 추가시 오류 발생
+	> pom.xml에 tomcat api 추가 해줘야함 구글에 tomcat-api 검색해서 맞는 버전의 dependency 코드 긁어오기
+	> 혹은 pom.xml하단에 dependencies -> add 이후 검색해서 추가하기도 가능 (Global Repository rebuild작업해야 검색가능)
+
+* 이후 실행하고 tomcat 홈 디렉토리 등록하고 실행하면 실행된다.
+
+* 이제 MVC 방식으로 변경해야한다
 
 
 
