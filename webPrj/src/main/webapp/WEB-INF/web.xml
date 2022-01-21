@@ -30,7 +30,7 @@
 	<servlet-mapping>
 	   <servlet-name>dispatcher</servlet-name>
 	   <!-- /이렇게만 작성하면 모든 URL이 통과되지만 /*로 작성하면 예외없이 모든 URL을 front controller가 받음 -->      
-	   <url-pattern>/*</url-pattern>
+	   <url-pattern>/</url-pattern>
 	</servlet-mapping>
 
 	<display-name>Welcome to Tomcat</display-name>

@@ -186,26 +186,87 @@
 
 
 
-< ------------------------------------------------------------ dispatcher-servlet.xml 파일 설정 ------------------------------------------------------------ >
+< ------------------------------------------------------------ 스프링 컨트롤러 IndexController 작성하기 ------------------------------------------------------------ >
+* Spring이 제공하는 MVC 지원 라이브러리(dispatcher lib)의 설정파일인 dispatcher-servlet.xml파일 작성하고 Index Controller 만들기
+* 어떤 구문으로 만들어야 하는지 우리는 알 수 없다.
+	> 이것을 제공해주는 Spring의 공식문서에서 레퍼런스 참조하기
+	  https://docs.spring.io/spring-framework/docs/ 이곳에서 맞는 버전의 공식문서를 살펴봄 (core 목록 누르면 DI를 공부할 때 봤던 xml설정내용 보임)
 
+* 기존의 Spring은 beans태그 안에서 bean태그를 이용해 설정해 어떤 클래스를 설정하면 이를 객체화해서(id=변수명, class=어떤클래스) IoC Container에 담게된다.
+* 하지만 MVC에서 *-servlet.xml 설정파일은 id값이 변수명이 아니라 URL로 사용된다. 
+  (컨테이너 담겨있는 객체들 중에서 사용자 요청이 URL로 옴, 그 URL을 가지고 IoC Container에서 꺼냄 무엇을? class속성에 있는 클래스로 된 객체를)
 
+	<bean id="/index" class="com.hoseok.web.controller.IndexController">
+		<!-- collaborators and configuration for this bean go here -->
+	</bean>
 
+* 이제 남은것은 Spring의 Dispatcher 클래스가 IndexController에서 컨테이너에서 꺼내고 가지고 있는 기능을 호출해야함
+	> URL과 Controller를 매핑하는 정보를 id를 이용해 URL을 쓰는데 이게 bean 형태로 컨테이너에 담겨있음
+	> 문제는 frontController에서 Controller를 사용하기 위해서는 요청을 수반할 수 있는 약속된 무엇 즉 기능이 있어야함
+	> 약속된 함수명을 사용해야 한다. : handleRequest
 
+* 모든 컨트롤러는 디스패처가 정의해놓은 함수를 사용해야 함, Controller interface 타입
+	> POJO클래스가 이전에는 Servlet에 종속되어 있었지만 이제는 Dispatcher-Servlet에 종속되어 있다.
 
+	public class IndexController implements Controller {
 
+   		@Override
+   		public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+   	     		// TODO Auto-generated method stub
+   	    		return null;
+  	  	}
 
+	}
 
+* 위에 Dispatch기능은 빠져있다(Spring이 제공) 따라서 함수가 반환하는 값은 Dispatch를 하기위한 ModelAndView를 반환한다.
+	> ModelAndView객체를 생성해 어떤 모델을 전달하고 어떤 view에 전달할지 값을 설정하고 ModelAndview객체를 반환한다.
+	public class IndexController implements Controller {
 
+	    @Override
+	    public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        
+        	ModelAndView mv = new ModelAndView();
+        
+        	// data키워드를 가진 String data를 담음 -> Model을 data란 이름으로 담아서 저장
+        	mv.addObject("data", "Hello Spring MVC~");
+        	// view에 대한 정보를 담음, 두가지 방법이 있다.
+            	// 1. view 객체를 따로 만들어서 설정 : mv.setView(View view);
+            	// 2. view의 이름만 담아서 전달 : mv.setViewName(@Nullable String viewName);
+        	mv.setViewName("index.jsp");
+        
+        	return mv;
+    	   }
 
+	}
 
+* model을 반환하고 나서의 실행 순서
+	1. Model and View를 Dispatcher-Servlet으로 반환
+	2. Dispatcher-Serlvet이 view로 Forwarding을 해 Model전달
+	3. View는 출력할때 model을 사용해 사용자에게 보여줌
 
+* 실제 IndexController를 실행하면 404오류 발생, 왜 그럴까?
+	> tomcat을 이용해 tomcat Annotation을 사용할땐 매핑주소를 잘 써주지만 POJO클래스이므로(톰캣이 모름) 주소를 소스코드를 반환해버림
+* 그래서 http://localhost:8080/webPrj/index로 직접 입력해 접속해도 404오류 발생 왜?
+	1. IndexController를 실행하고 url에 http://localhost:8080/webPrj/index를 실행
+	2. web.xml에 설정한대로 Front-Controller가 모든 URL을 받고 약속된 *-servlet.xml에서 어떤 컨트롤러를 실행할지 찾음 따라서 IndexController실행함
+	3. IndexController에서 포워딩을하는 mv.setViewName("index.jsp"); 이 부분도 결국 하나의 요청이므로 DispatcherServlet에선 이를 다시 받아서 *-servlet.xml로 보냄
+	4. 하지만 inde.jsp로 지정된 url이 없으므로 404 오류 발생
 
+* 여기서 기존의 web.xml설정이 위와같은 문제를 야기함
+	<servlet-mapping>
+	   <servlet-name>dispatcher</servlet-name>
+	   <!-- /이렇게만 작성하면 모든 URL이 통과되지만 /*로 작성하면 예외없이 모든 URL을 front controller가 받음 -->      
+	   <url-pattern>/*</url-pattern>
+	</servlet-mapping>
+	
+	> url-pattern에서 /* 별표까지 쓰게 되면 어떠한 요청(forwarding이든 get요청이든)도 무조건 dispatcher를 거쳐서 지나감.
+	> 결국 index.jsp를 포워딩하는 부분에서 다시 DispatcherServlet로 전달되고 *-servlet.xml 파일에서 url-mapping을 찾으므로 404오류가 발생한다.
 
+* 결국 url-pattern에서 /* -> /로 변경
+	> 이렇게 하면 DispatcherServlet을 거쳐서 dispatcher-servlet.xml에서 매핑정보를 찾지만
+	> dispatcher-servlet.xml에서 리소스 정보를 찾지만 없게되면 그냥 리소스를 직접 요청함
 
-
-
-
-
+* 이후 실행하고 URL을 요청하면 정상적으로 페이지 출력
 
 
 
