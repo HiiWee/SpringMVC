@@ -5,8 +5,13 @@
         https://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!-- 이곳에 mapping하는 URL은 실제 폴더나 파일이 존재하는 것이 아니라 이름의 역할 요청시 이 이름을 사용하게됨 -->
-	<bean id="/index" class="com.hoseok.web.controller.IndexController">
-		<!-- collaborators and configuration for this bean go here -->
-	</bean>
+	<bean id="/index" class="com.hoseok.web.controller.IndexController"/>
 
+    <!-- ViewResolver 설정 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 접두사 -->
+        <property name="prefix" value="/WEB-INF/view/"/>
+        <!-- 접미사 -->
+        <property name="suffix" value=".jsp"/>
+    </bean>
 </beans>

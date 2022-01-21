@@ -310,3 +310,82 @@
 
 
 
+
+< ------------------------------------------------------------ View 페이지를 위한 위치 ------------------------------------------------------------ >
+* 이전에 보안을 위해 View페이지를 WEB-INF/view/로 옮김
+	> 이를 통해 경로가 길어지고 페이지를 찾는 과정이 복잡해짐
+* 복잡함을 해결하고 쉽게 찾을 수 있게 하는 ViewResolver를 사용해보자
+
+* 뷰 페이지 설정은 setter를 이용했지만 오버로드 생성자를 이용해 객체 생성과 동시에 설정이 가능하다.
+	> ModelAndView mv = new ModelAndView("/WEB-INF/view/index.jsp");
+
+* /WEB-INF/view/... .jsp는 반복되며 계속 중복되므로 이것을 빼고 ModelAndView mv = new ModelAndView("index");만 남긴다.
+	> 이렇게 반환하면 디스패처가 그런 리소스가 없다(JSP,경로가없음) 이것을 도와주는 것이 ViewResolver의 역할이다.
+	> 반환하게 되면 이에 앞뒤에 경로와 파일확장자를 붙여 실질적인 view를 찾게 도와준다.
+
+* dispatchar-servlet.xml 파일에서 뷰 리졸버 빈을 추가한다.
+    <!-- ViewResolver 설정 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 접두사 -->
+        <property name="prefix" value="/WEB-INF/view/"/>
+        <!-- 접미사 -->
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
