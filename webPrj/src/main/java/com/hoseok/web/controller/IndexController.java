@@ -11,7 +11,6 @@ public class IndexController implements Controller {
 
     @Override
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        System.out.println("index controller");
         ModelAndView mv = new ModelAndView();
         
         // data키워드를 가진 String data를 담음
@@ -19,7 +18,7 @@ public class IndexController implements Controller {
         // view에 대한 정보를 담음, 두가지 방법이 있다.
             // 1. view 객체를 따로 만들어서 설정 : mv.setView(View view);
             // 2. view의 이름만 담아서 전달 : mv.setViewName(@Nullable String viewName);
-        mv.setViewName("index.jsp");
+        mv.setViewName("/WEB-INF/view/index.jsp");
         
         return mv;
     }
