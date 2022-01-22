@@ -1,0 +1,20 @@
+package com.hoseok.web.controller.notice;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
+
+public class DetailController implements Controller{
+
+    @Override
+    public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // ViewResolver를 이용해 경로를 간편하게 줄임
+        ModelAndView mv = new ModelAndView("notice/detail");
+        // mv.setViewName("/WEB-INF/view/notice/detail.jsp"); 오버로드 생성자 이용
+        
+        return mv;
+    }
+    
+}

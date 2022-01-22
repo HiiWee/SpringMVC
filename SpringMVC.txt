@@ -412,9 +412,18 @@
 
 
 
+< ------------------------------------------------------------ 공지사항 컨트롤러 추가하기 ------------------------------------------------------------ >
+* static/ 폴더의 구조를 그대로 view안에 notice/detail.jsp, notice/list.jsp 파일 생성 및 기존 html파일에서 내용 복사해서 가져오기
+* 이에 맞는 컨트롤러도 생성 com.hoseok.web.controller.notice.ListController.java, DetailController.java
 
+* Controller에서는 View, Model을 준비해서 DispatcherServlet 클래스로 넘겨주는데 일단 IndexController.java의 내용을 빌려쓴다.
+	> 올바른 경로 작성하기 ViewResolver에서 접두사:/WEB-INF/view/, 접미사:.jsp이므로 제외하고 작성 ex) "notice/list"
 
+* 이제 URL 매핑을 시켜줘야함 --> dispatcher-servlet.xml
+	<bean id="/notice/list" class="com.hoseok.web.controller.notice.ListController"/>
+	<bean id="/notice/detail" class="com.hoseok.web.controller.notice.DetailController"/>
 
+* 이제 기존 xxx.html로 링크되어있던 하이퍼링크들을 컨트롤러에 매핑한 URL로 변경해준다.
 
 
 
