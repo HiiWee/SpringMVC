@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-        https://www.springframework.org/schema/beans/spring-beans.xsd">
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        https://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <!-- 이곳에 mapping하는 URL은 실제 폴더나 파일이 존재하는 것이 아니라 이름의 역할 요청시 이 이름을 사용하게됨 -->
 	<bean id="/index" class="com.hoseok.web.controller.IndexController"/>
@@ -14,4 +17,6 @@
         <!-- 접미사 -->
         <property name="suffix" value=".jsp"/>
     </bean>
+    
+    <mvc:resources location="/static/" mapping="/**"></mvc:resources>
 </beans>

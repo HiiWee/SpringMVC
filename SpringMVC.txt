@@ -342,33 +342,72 @@
 
 
 
+< ------------------------------------------------------------ 정적파일 서비스하기 ------------------------------------------------------------ >
+* images/logo.png파일이 존재 다만 실제로 경로를 열면 404에러 발생(localhost:8080/images/logo.png)
+* 이유는 기본적으로 Spring은 정적인 파일을 제공하지 않도록 막아놓아서 발생함
+* HTML, img등은 서비스 불가능하도록 막아놨지만 jsp는 열어놓음
 
+* 위와같은 일이 발생하는 이유
+	> web.xml에서 url-pattern이 /이다.
+	> /* : jsp까지 막겠다는 의미
+	> /  : 기본적인 정적인 파일은 막지만 jsp는 허용함
+	> 따라서 정적(static)인파일(img, js, css 등)이 로드되는것을 막는다.
 
+* 이를 위해 따로 리소스 설정을 해주어야 한다.
+	<mvc:resources location="/resource/" mapping="/resource/**"
+	> 위와같이 resource라는 폴더안에 static file들을 모아놓고 url을 리소스를 통해 제공할 수 있게 만듦
 
+* 이것을 위해 schema, namespace 설정이 필요하다.
+	> dispatcher-servlet.xml에서 리소스 설정이 mvc: 접두사를 이용해 설정한다.
+	> 기본적으로 dispatcher-servlet.xml를 처리하는 처리기는 beans라 하는것을 처리한다.
+	> 우리는 mvc를 담당하고 있는 다른 처리기가 필요하다.
 
+* mvc처리기 이용하기
+	> beans 태그에 설정을 추가한다.
+	<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="...다른설정..."
+		xmlns:mvc="http://www.springframework.org/schema/mvc"		<< 추가
+		xsi:schemaLocation="...다른설정...
+       		http://www.springframework.org/schema/mvc
+        	https://www.springframework.org/schema/mvc/spring-mvc.xsd">	<< 추가
 
+	> 이후 사용가능한 태그 목록을 보면 mvc접두사가 붙은 태그들도 이용할 수 있게된다.
 
+* 설정들의 의미
+	> 우리는 태그로 xml에서 어떤 명령어를 입력한다.
 
+	> xsi:schemaLocation="http://www.springframework.org/schema/mvc
+     			https://www.springframework.org/schema/mvc/spring-mvc.xsd" 페이지 내에서 쓸 수 있는 태그를 정의하는 파일 (스키마파일)
+		> 그리고 그 안에 들어가는 url들이 스키마 파일 정의에 대한 이름들이 된다.
+		> 이름이 긴 이유? : 다른 스키마 파일들도 같이 포함시키려면 중복되면 안된다. (클래스 만들때 패키지명 같이 사용하는것처럼) 따라서 도메인명 사용
 
+	> xmlns:mvc="http://www.springframework.org/schema/mvc"
+			스키마 파일의 원래 이름을 가지고 쓰긴 너무 길어서 이름을 대신해서 mvc라는 접두사를 이용한다.
+			즉 xmlns:mvc="이곳엔 스키마를 입력한다." 그리고 mvc는 스키마를 식별하는 namespace가 된다.
 
+	> 즉 mvc:를 붙여서 태그를 이용하면 스키마에 정의되어 있는 것을 사용하는 것이다.
+	
+* 우리는 여기서 mvc:resources 태그를 사용할 것이다.
+	> <mvc:resources location="" mapping="" />
+	> Spring dispatcher가 위 명령어를 읽으면 mvc설정을 따라서 맞게 행동함
+	> mapping : 특별한 url을 사용자가 요청
+	> location : 사용자가 요청한 url(mapping)은 여기에서 찾게됨(하위폴더 포함)
 
+	> <mvc:resources location="/resource/" mapping="/resource/**" />
 
+* 하지만 mapping을 /resource/**로 두었으므로 이미지를 불러오기 위해선 /images/...png 파일들의 경로를 /resource/images/...png로 변경해야함 >> 번거로움
 
+	> <mvc:resources location="/static/" mapping="/**" />
+	> 이미지가 루트에 있는것처럼 둔다.
+	> 기존 html/ 폴더에 static 파일을 두고 webapp/에 static/이라는 이름으로 옮긴다.
+	> 따라서 정적인 파일이 요청이 되면 모든 요청은 /static/이라는 폴더에서 뒤진다.
+	> 실제로는 static이란 폴더안에 이미지 파일이 있지만 mapping을 /**로 두었으므로 static이 root가 되는것처럼 작용한다.
 
+* 실제 경로 테스트 해보기
+	> http://localhost:8080/static/images/banner3.svg	>> 404 오류 발생 (mapping을 /로 두었으므로)
+	> http://localhost:8080/images/banner3.svg		>> 정상적으로 이미지 출력됨
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+	> 결국 /static/과 /** 매핑되었으므로 static/을 root로 생각한다. 따라서 모든 static 파일들은 static/파일아래에 둔다.
 
 
 
