@@ -8,9 +8,9 @@
         https://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <!-- 이곳에 mapping하는 URL은 실제 폴더나 파일이 존재하는 것이 아니라 이름의 역할 요청시 이 이름을 사용하게됨 -->
-	<bean id="/index" class="com.hoseok.web.controller.IndexController"/>
-	<bean id="/notice/list" class="com.hoseok.web.controller.notice.ListController"/>
-	<bean id="/notice/detail" class="com.hoseok.web.controller.notice.DetailController"/>
+	<bean name="/index" class="com.hoseok.web.controller.IndexController"/>
+	<bean name="/notice/list" class="com.hoseok.web.controller.notice.ListController"/>
+	<bean name="/notice/detail" class="com.hoseok.web.controller.notice.DetailController"/>
 
     <!-- ViewResolver 설정 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
