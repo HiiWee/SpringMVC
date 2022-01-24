@@ -1,35 +1,35 @@
 @charset "UTF-8";
-#footer{
-	background: #313131;	
+
+#footer {
+	background: #313131;
 	height: 100px;
-	padding:20px;	
+	padding: 20px;
 }
 
-#footer .content-container{
+#footer .content-container {
 	display: flex;
-	flex-flow:row wrap;
-	flex:1;
+	flex-flow: row wrap;
+	flex: 1;
 }
 
-#footer-logo{
-	width:205px;
+#footer-logo {
+	width: 205px;
 }
 
-#company-info{
-	width:755px;
+#company-info {
+	width: 755px;
 	display: flex;
-	flex-flow:column;
+	flex-flow: column;
 }
 
-#company-info dl{
+#company-info dl {
 	display: flex;
-	flex-flow:row wrap;	
+	flex-flow: row wrap;
 }
 
-#company-info dl dd{
-	margin-right:50px;
+#company-info dl dd {
+	margin-right: 50px;
 }
-
 
 /* --- mobile ----------------------------------------------------- */
 /* #footer {

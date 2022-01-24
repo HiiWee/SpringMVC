@@ -7,11 +7,11 @@
 	background: url("../images/bg-aside-title.png") no-repeat;
 }
 
-.aside .margin-top{
+.aside .margin-top {
 	margin-top: 45px;
 }
 
-.aside > h1 {
+.aside>h1 {
 	font-family: 맑은 고딕, 고딕, sans-serif;
 	font-size: 24px;
 	font-weight: bold;
@@ -24,7 +24,7 @@
 	width: 180px;
 }
 
-.aside .menu.text-menu > h1 {
+.aside .menu.text-menu>h1 {
 	font-family: 맑은 고딕, 고딕, sans-serif;
 	font-size: 13px;
 	font-weight: bold;
@@ -45,7 +45,7 @@
 }
 
 .aside .menu.text-menu li .current {
-    background: url(../images/icon-current.png) no-repeat 15px center;
+	background: url(../images/icon-current.png) no-repeat 15px center;
 }
 
 .aside .menu.text-menu li a {
@@ -61,10 +61,10 @@
 }
 
 .aside .menu.first {
-	margin-top: 45px;	
+	margin-top: 45px;
 }
 
-.aside .menu.first > h1 {
+.aside .menu.first>h1 {
 	color: #ffffff;
 	height: 27px;
 	line-height: 27px;
@@ -75,8 +75,7 @@
 	background: url(../images/bg-aside-sub-title.png) no-repeat 0px 0px;
 }
 
-.aside .menu.text-menu.first ul,
-.aside .menu.text-menu.first .list {
+.aside .menu.text-menu.first ul, .aside .menu.text-menu.first .list {
 	border-top: none;
 	margin-top: 0px;
 }
@@ -85,7 +84,7 @@
 	margin-top: 20px;
 }
 
-.aside .menu > h1 {
+.aside .menu>h1 {
 	font-family: 맑은 고딕, 고딕, sans-serif;
 	font-size: 13px;
 	font-weight: bold;
@@ -94,7 +93,7 @@
 	background: url("../images/icon-recommend.png") no-repeat left center;
 }
 
-.aside .menu > ul {
+.aside .menu>ul {
 	margin-top: 10px;
 }
 
@@ -104,7 +103,7 @@
 
 /* ==== 테블릿 이하에서 달라질 공통 Style 오버라이드-- 너비 959px 이하 =========================================================== */
 @media all and (max-width:959px) {
-	#aside {		
+	#aside {
 		position: fixed;
 		top: 0px;
 		left: -205px;
@@ -116,7 +115,7 @@
 
 /* ==== 중간 크기 장치만을 위한 Style -- 너비 640px~ 959px=========================================================== */
 @media all and (min-width:640px) and (max-width:959px) {
-		#aside {		
+	#aside {
 		position: fixed;
 		top: 0px;
 		left: -205px;
