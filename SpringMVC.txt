@@ -614,14 +614,48 @@
 
 
 
+< ------------------------------------------------------------ Tiles ViewResolver 설정하기 ------------------------------------------------------------ >
+* Tiles를 이용하기 위해 페이지 명단과 어디에 포함시킬지에 대한 지시서 완성 하지만, 한 가지 설정이 더 남음
 
+* 사용자가 URL 요청 -> Controller가 URL(/notice/list)을 받음 -> 데이터베이스를 이용해 데이터생성(미구현) -> 그것을 출력하기 위한 페이지 요청
+  -> 이때 jsp페이지가 아닌 tiles를 이용
 
+	> jsp를 요청할 때는 Controller가 반환하는 문자열을 이용해 페이지를 찾아주는 작업을 함 --> 이 때 리소스를 찾기위해 접두사, 접미사를 붙임
 
+* 이번에는 notice.list를 반환하게 되면 이것으로 페이지를 합치는 작업을 함 이 때 tiles를 요청하고 페이지를 만들어내는 과정이 있다.
+  notice.list에 해당되는 페이지를 찾아주는 역할을 하는 것이 있어야함
+	> 지금까지는 페이지명단과 어디에 포함시킬지에 대한 내용은 완성했지만, notice.list를 가지고 page를 이어주는 tiles ViewResolver가 있어야함
+	> 즉 반환되는것을(notice.list) tiles.xml 페이지 명단을 찾아서 연결해야함 --> 지시서가 어디있는지 알아야함
 
+* 즉 기존의 InternalResourceViewResolver 말고 다른 View Resolver가 필요하다
+    <!-- Tiles ViewResolver 설정 -->
+    <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView" />
+        <property name="order" value="1" />
+    </bean>
+    
+    <bean class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+        <property name="definitions" value="/WEB-INF/tiles.xml"/>
+    </bean>
 
+	> TilesConfigurer가 아파치 타일즈로 타일 정의를 불러오고 배치함
+	> UrlBasedViewResolver는 view를 설정하는데 내부적으로 serViewClass로 TilesView를 세팅하고 setOrder로 첫번째로 tiles.xml을 뒤져본다
+	  tiles.xml에 반환된 값(ex:notice.list)과 일치하는것이 존재하면 페이지 조각을 조립하고 화면에 출력한다.
+	  만약 존재하지 않으면(notice/list) 후에 InternalResourceViewResolver에서 직접적으로 View페이지를 찾게된다. (prefix, suffix붙여서)
 
+* 따라서 기존에 만들었던 InternalResourceViewResolver도 order를 2로 setting 해줘야 함
+    <!-- ViewResolver 설정 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 접두사 -->
+        <property name="prefix" value="/WEB-INF/view/" />
+        <!-- 접미사 -->
+        <property name="suffix" value=".jsp" />
+        <property name="order" value="2" />
+    </bean>
 
+* 일단 실행하게 되면 jstl 라이브러리가 없으므로 오류가 발생 따라서 pom.xml에서 javax.servlet jstl 라이브러리를 추가해야함
 
+* 아직 index.jsp는 적용하지 않았으므로 직접 notice/list url을 요청하면 view 페이지들이 정상적으로 합쳐진걸 볼 수 있다.
 
 
 
