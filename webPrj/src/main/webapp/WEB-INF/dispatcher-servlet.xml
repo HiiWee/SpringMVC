@@ -13,8 +13,7 @@
     <bean name="/notice/detail" class="com.hoseok.web.controller.notice.DetailController" />
 
     <!-- ViewResolver 설정 -->
-    <bean
-        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <!-- 접두사 -->
         <property name="prefix" value="/WEB-INF/view/" />
         <!-- 접미사 -->

@@ -1,39 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
                       http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
-    version="4.0" metadata-complete="true">
-    <!-- 이곳에 mapping 정보 넣는다. -->
-    <!-- <servlet> -->
-    <!-- <servlet-name>na</servlet-name> 실행할 서블릿 코드 -->
-    <!-- <servlet-class>Nana</servlet-class> -->
-    <!-- </servlet> -->
+	version="4.0" metadata-complete="true">
+	<!-- 이곳에 mapping 정보 넣는다. -->
+	<!-- <servlet> -->
+	<!-- <servlet-name>na</servlet-name> 실행할 서블릿 코드 -->
+	<!-- <servlet-class>Nana</servlet-class> -->
+	<!-- </servlet> -->
 
-    <!-- <servlet-mapping> -->
-    <!-- <servlet-name>na</servlet-name> -->
-    <!-- <url-pattern>/hello</url-pattern> 혹시 hello라는 url을 보면 위의 Nana서블릿 
-        클래스를 실행해라 : 사용자에게 제공하는 URL -->
-    <!-- </servlet-mapping> -->
+	<!-- <servlet-mapping> -->
+	<!-- <servlet-name>na</servlet-name> -->
+	<!-- <url-pattern>/hello</url-pattern> 혹시 hello라는 url을 보면 위의 Nana서블릿 클래스를 
+		실행해라 : 사용자에게 제공하는 URL -->
+	<!-- </servlet-mapping> -->
 
-    <!-- mapping 정보를 넣음 -->
-    <servlet>
-        <!-- mapping 주소가 서블릿과 연관을 맺기 위해 이름을 정해줘야 한다. -->
-        <servlet-name>dispatcher</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-    </servlet>
+	<!-- mapping 정보를 넣음 -->
+	<servlet>
+		<!-- mapping 주소가 서블릿과 연관을 맺기 위해 이름을 정해줘야 한다. -->
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	</servlet>
 
-    <!-- front controller이므로 모든 URL을 만나면 위의 DispatcherServlet 클래스를 실행 이후 
-        어떤 URL은 어떤 POJO클래스가 맞는지 분배하는 동작을 함 -->
-    <servlet-mapping>
-        <servlet-name>dispatcher</servlet-name>
-        <!-- /이렇게만 작성하면 모든 URL이 통과되지만 /*로 작성하면 예외없이 모든 URL을 front controller가 
-            받음 -->
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>
+	<!-- front controller이므로 모든 URL을 만나면 위의 DispatcherServlet 클래스를 실행 이후 어떤 
+		URL은 어떤 POJO클래스가 맞는지 분배하는 동작을 함 -->
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<!-- /이렇게만 작성하면 모든 URL이 통과되지만 /*로 작성하면 예외없이 모든 URL을 front controller가 받음 -->
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
 
-    <display-name>Welcome to Tomcat</display-name>
-    <description>
+	<display-name>Welcome to Tomcat</display-name>
+	<description>
      Welcome to Tomcat
   </description>
 

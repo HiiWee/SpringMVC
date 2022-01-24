@@ -526,21 +526,63 @@
 	2. 페이지를 붙일경우에 layout에서 어떤 위치에 붙일지 위치를 정하는 지시 필요(layout에서 페이지를 어떤식으로 붙일것인지)
 
 * https://tiles.apache.org/에 접속해 라이브러리를 다운받음
+	> https://tiles.apache.org/framework/tutorial/basic/pages.html 에서 xml 형식을 가져옴 주로 /WEB-INF/tiles.xml로 저장함
+[tiles.xml]
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	<definition name="notice.list" template="/layouts/classic.jsp">
+		<put-attribute name="title" value="Tiles tutorial homepage" />
+		<put-attribute name="header" value="/tiles/banner.jsp" />
+		<put-attribute name="menu" value="/tiles/common_menu.jsp" />
+		<put-attribute name="body" value="/tiles/home_body.jsp" />
+		<put-attribute name="footer" value="/tiles/credits.jsp" />
+	</definition>
+</tiles-definitions>
+
+* 위의 설정에서 definition태그의 name속성은 Controller가 반환하게 될 이름이다.
+* 따라서 Controller에서는 View, Model을 준비해서 DispatcherServlet 클래스로 넘겨주는데 이때의 값을 notice/list 에서 notice.list로 변경한다.
+	> 꼭 .이 아니라 다른 방식을 사용해도 되지만 . 문자가 패턴만들기가 간편하다
+
+* 그렇다면 detail.jsp페이지도 또 definition을 추가해야하나?
+	> 하나로 합칠 수 있는 방법이 있다.
+
+* tiles.xml에서 notice.list라는 이름을 받게 되면 나눠졌던 페이지들을 합치기 위한 페이지를 담게된다.
+	> template속성에 어떤 layout을 사용할지 설정한다. (web root를 기반으로 설정)
+	> layout에 붙이기 위해 조각난 페이지들을 put-attribute태그에 붙이게 된다.
+
+* put-attribute 태그 속성
+	> name : 사용자가 정하는 이름(layout의 어떤 부분인지)
+	> value : 실제 View파일의 경로(web root를 기반으로 설정)
+
+* 최종 xml (각 controller의 DispatcherServlet Class에 전달하는 값은 definition태그의 name속성과 동일해야 한다.)
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE tiles-definitions PUBLIC
+           "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+           "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+    <tiles-definitions>
+        <definition name="notice.list" template="/WEB-INF/view/customer/inc/layout.jsp">
+            <put-attribute name="title" value="Tiles tutorial homepage" />
+            <put-attribute name="header" value="/WEB-INF/view/inc/header.jsp" />
+            <put-attribute name="visual" value="/WEB-INF/view/customer/inc/visual.jsp" />
+            <put-attribute name="aside" value="/WEB-INF/view/customer/inc/aside.jsp" />
+            <put-attribute name="body" value="/WEB-INF/view/customer/notice/list.jsp" />
+            <put-attribute name="footer" value="/WEB-INF/view/inc/footer.jsp" />
+        </definition>
+        <definition name="notice.detail" template="/WEB-INF/view/customer/inc/layout.jsp">
+            <put-attribute name="title" value="Tiles tutorial homepage" />
+            <put-attribute name="header" value="/WEB-INF/view/inc/header.jsp" />
+            <put-attribute name="visual" value="/WEB-INF/view/customer/inc/visual.jsp" />
+            <put-attribute name="aside" value="/WEB-INF/view/customer/inc/aside.jsp" />
+            <put-attribute name="body" value="/WEB-INF/view/customer/notice/detail.jsp" />
+            <put-attribute name="footer" value="/WEB-INF/view/inc/footer.jsp" />
+        </definition>
+    </tiles-definitions>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+* 지시서는 완성되었지만 layout에서 각각의 조각들을 어떻게 어느위치에 붙일것인지 설정해야함
 
 
 
