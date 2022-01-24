@@ -31,5 +31,10 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>5.2.19.RELEASE</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.apache.tiles</groupId>
+		    <artifactId>tiles-jsp</artifactId>
+		    <version>3.0.8</version>
+		</dependency>
 	</dependencies>
 </project>

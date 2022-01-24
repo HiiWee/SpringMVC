@@ -588,13 +588,27 @@
 
 
 
+< ------------------------------------------------------------ layout 페이지 만들기 및 Tiles 라이브러리 설정 ------------------------------------------------------------ >
+* Tiles가 사용하게 될 지시서는 작성
+	> notice.list와 같이 Tiles가 지시받는 목록중에 있는 이름을 받음 이 때 두가지의 지시서 필요
+		1. notice.list를 가지고 만들어낼 조각들의 명단 필요 --> tiles.xml(어떤 페이지들이 필요한가에 대한 목록)
+		2. page들을 layout의 어디에다 포함시킬지 지시서 필요
 
+* Tiles 제공 태그 라이브러리
+	> Maven project이므로 pom.xml로 받아옴(Global Repo로 검색)
+	> tiles.jsp 추가
 
+* layout.jsp에 태그라이브러리 추가
+	<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 
+* layout에 각 위치에 맞는 조각들(page) 세팅
+	> <tiles:insertAttribute name="header" /> 태그 이용
+	> name은 tiles.xml에서 put-attribute(속성을) layout에 그 속성을 insert하겠다는 의미
 
+* tiles.xml put-attribute의 name중 title을 페이지가 아니라 문자열이다.
+	> <tiles:getAsString name="title"/> 형식으로 문자열을 꽂을 수 있다.
 
-
-
+* 한 가지의 설정을 더 해야 실행할 수 있다.
 
 
 
