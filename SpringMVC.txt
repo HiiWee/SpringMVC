@@ -477,12 +477,13 @@
 
 * list.jsp의 header, footer부분은 동일하므로 지우기
 
-* list.jsp, detail.jsp의 공통부분이 존재 aside, visual영역이 공통분모
+* list.jsp, detail.jsp의 공통부분이 존재 aside, visual영역이 공통분모 이므로 빼서 공통적으로 관리한다(customer/inc/)
 	> view/inc/안에는 view 전체에서 사용되는 부분이고
 	> list와 detail의 공통부분은 공지사항, 자주하는질문, 수강문의, 이벤트들에서 같이 사용되는 메뉴이므로 다른폴더에 생성하는것이 바람직함
 	> 고객센터 관련 내용이므로 customer/inc/폴더에 생성한다.
 
-* 그리고 notice/ 폴더도 customer/ 에 묶이니까 옮겨서 같이 담는것이 페이지 관리가 바람직해짐 이곳에 공지사항, 자주하는질문, 수강문의, 이벤트등의 폴더들도 생성해서 같이 관리함
+* 그리고 notice/ 폴더도 고객이 사용하는 메뉴이므로 customer/ 에 묶인다. 
+  따라서 옮겨서 같이 담는것이 페이지 관리가 바람직해짐 이곳에 공지사항, 자주하는질문, 수강문의, 이벤트등의 폴더들도 생성해서 같이 관리함
 
 * 결국 list, detail.jsp는 main과 main을 포함하는 껍데기들만 남아있다.
 	> 껍데기들은 aside, visual, header, footer를 배치할 수 있는 영역 --> layout
