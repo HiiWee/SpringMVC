@@ -13,7 +13,7 @@ public class IndexController implements Controller {
     @Override
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
         // ViewResolver를 이용해 경로를 간편하게 줄임
-        ModelAndView mv = new ModelAndView("index");
+        ModelAndView mv = new ModelAndView("root.index");
         // data키워드를 가진 String data를 담음
         mv.addObject("data", "Hello Spring MVC~");
         // view에 대한 정보를 담음, 두가지 방법이 있다.

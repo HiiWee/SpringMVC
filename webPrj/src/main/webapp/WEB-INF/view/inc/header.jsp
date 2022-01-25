@@ -6,7 +6,7 @@
 		<!-- ---------------------------<header>--------------------------------------- -->
 
 		<h1 id="logo">
-			<a href="/index.html"> <img src="/resource/images/logo.png"
+			<a href="/index.html"> <img src="/images/logo.png"
 				alt="뉴렉처 온라인" />
 
 			</a>
