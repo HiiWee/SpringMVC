@@ -1,6 +1,6 @@
 ﻿// model (DAO)
 
-package com.hoseok.web.servcie;
+package com.hoseok.web.service;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

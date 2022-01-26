@@ -726,6 +726,113 @@
 
 
 
+< ------------------------------------------------------------ 서비스 객체 사용하기 ------------------------------------------------------------ >
+* NoticeService와 Entity인 Notice를 가져옴 --> 두 가지를 이용해 query 결과를 view에서 볼 수 있도록 해보자
+* JDBC driver를 pom.xml에 추가
+
+* NoticeService를 이용해 Model을 만들어 View에 보내 출력해야함
+	> Controller에서 직접 NoticeService를 객체화? --> 비효율적 --> Spring에 DI를 이용하자
+	> *-servlet.xml에 bean으로 이용해 DI하면 IoC Container에 담기게 됨
+* Spring이 실행시 bean태그를 읽으면 IoC Container에 담아놓는다.
+* 따라서 IoC 컨테이너에 담긴 객체들을 가져다 쓰거나 Spring이란 녀석이 DispatcherServlet에서 가져다 쓰기도 함
+
+* 여기에(HandlerMapping) NoticeService를 생성한다. 그리고 Controller에 DI한다.
+	> 이렇게 만들어 놓으면 여러 Controller가 사용할 수 있다.
+	[NoticeService 객체]
+    <!-- NoticeService bean 생성(객체화 되어 IoC Container에 담겨지게 된다.) -->
+    <bean id="noticeService" class="com.hoseok.web.service.NoticeService" />
+
+
+	[ListController에 DI]
+    <!-- ListController에 DI(setNoticeService) -->
+    <bean name="/notice/list" class="com.hoseok.web.controller.notice.ListController">
+        <property name="noticeService" ref="noticeService"></property>
+    </bean>
+    <bean name="/notice/detail" class="com.hoseok.web.controller.notice.DetailController" />
+
+
+* 위와같이 DI하기 위해서는 ListController에 필드와 메소드가 필요하다.
+	> setNoticeService() 메소드와 setting한 값을 담기위한 NoticeService noticeService 필드가 필요하다.
+
+    private NoticeService noticeService;
+
+    public void setNoticeService(NoticeService noticeService) {
+        this.noticeService = noticeService;
+    }
+
+
+* 참고로 prperty에서 name은 setter를 의미한다. 그리고 ref은 위에서 생성한 noticeService이름을 가진 NoticeService객체를 참조하여 DI한다.
+
+
+* 이렇게 되면 bean을 이용해 데이터를 활용할 수 있다.
+	> List<Notice> list = noticeService.getList(1, "TITLE", "");
+	> mv.addObject("list", list);
+
+* 이렇게 bean을 이용해 list를 받아오고 받아온 list를 "list"이름으로 Model로 지정하여 DispatcherServlet으로 보낸다.
+	> View가 list라는 이름을 통해서 데이터를 출력할 수 있다.
+
+* View도 jstl태그중 forEach를 이용해 반복하면서 Notice의 값들을 출력한다. 이때 NOTICE_VIEW 뷰를 이용한다.
+	> <c:forEach var="notice" items="${list}"></c:forEach>
+	> Model이름을 list로 저장했으므로 list에 담겨있는 각 Notice객체 항목은 notice를 이용해 출력한다.(EL태그)
+	> ${notice.title} --> Notice.getTitle()메소드 호출
+
+	> forEach와 EL태그를 사용하지 않고 ${notice.title}을 자바코드로 나타내면
+                <%
+                List<Notice> list = (List<Notice>) request.getAttribute("list");
+                Notice notice = list.get(0);
+                System.out.println(notice.getTitle());
+                %>
+	> 위와같은 코드를 EL 및 JSTL을 이용하면 간단하게 표현 가능
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -50,7 +50,7 @@ public class Notice {
 	public Date getRegdate() {
 		return regdate;
 	}
-	public void setRegDate(Date regdate) {
+	public void setRegdate(Date regdate) {
 		this.regdate = regdate;
 	}
 	public int getHit() {
