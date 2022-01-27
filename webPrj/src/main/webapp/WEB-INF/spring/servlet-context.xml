@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- 이곳에 mapping하는 URL은 실제 폴더나 파일이 존재하는 것이 아니라 이름의 역할 요청시 이 이름을 사용하게됨 -->
+    <bean name="/index" class="com.hoseok.web.controller.IndexController" />
+    
+    <!-- ListController에 DI(setNoticeService) -->
+    <bean name="/notice/list" class="com.hoseok.web.controller.notice.ListController">
+        <property name="noticeService" ref="noticeService"></property>
+    </bean>
+    <bean name="/notice/detail" class="com.hoseok.web.controller.notice.DetailController" />
+
+    <!-- Tiles ViewResolver 설정 -->
+    <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView" />
+        <property name="order" value="1" />
+    </bean>
+    
+    <bean class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+        <property name="definitions" value="/WEB-INF/tiles.xml"/>
+    </bean>
+
+    <!-- ViewResolver 설정 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 접두사 -->
+        <property name="prefix" value="/WEB-INF/view/" />
+        <!-- 접미사 -->
+        <property name="suffix" value=".jsp" />
+        <property name="order" value="2" />
+    </bean>
+    
+    <mvc:resources location="/static/" mapping="/**"></mvc:resources>
+    
+</beans>
