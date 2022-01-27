@@ -858,20 +858,53 @@
 
 
 
+< ------------------------------------------------------------ Connection 정보 분리하기 ------------------------------------------------------------ >
+* DB 연결정보 분리하기
+	> 자바코드에 ID, Pwd, url, driver 두게 되면 서비스를 배포하게되면 컴파일된 바이너리 코드를 배포함
+	> 패스워드를 주기적으로 바꾸어야 할 때 소스코드 없이 배포된 상태에서 변경할 수 없음
+	> 패스워드 변경을 위해 소스코드 변경 및 컴파일 후 재배포를 해야함
+	> 각 DAO의 비밀번호를 변경하고 재배포하는것이 문제가 된다.
+	> 혹은 DB가 로컬호스트가 아니라 위치가 변경되어도 재배포를 해야함 --> 합당하지 않음
+
+* 따라서 변경에 대한 부분들을 빼서 xml로 둠
+	> 이후 xml에서 객체화 한 것을 DI해서 이용하게 되면 변경에 대한 부분도 xml텍스트만 수정하면 된다.
+	> text파일은 배포되어도 text그대로 배포되므로 수정이 용이함
 
 
+* 단순히 문자열 4개를 만들어 문자열을 DI해도 됨 하지만 4개의 정보를 하나의 그릇(객체)에 담아쓰는것이 바람직해보임
+* 4개를 묶고 있는 Data정보를 담을 수 있는 인터페이스 존재 : javax.sq.DataSource
+	> 이를 필드로 두고 xml에서 바인딩 할 수 있는 객체를 준비하고 세팅하기위해 setter도 정의한다.
 
+* 기존의 4개의 문자열을 이용해 드라이브를 로드, 커넥션 생성 하던 부분을 주석처리하고 DataSource를 이용한다.
+	> 변경 전 : Connection con = DriverManager.getConnection(url, uid, pwd);
+	> 변경 후 : Connection con = dataSource.getConnection(); (dataSource를 xml을 통해 DI받았다고 가정할 떄 가능)
 
+* 이제 dataSource에 어떤 객체를 꽂을지 작업해야함
+	> 어떤 객체를 만들고 어떻게 꽂아넣을것인가 --> xml에서 설정
 
+* xml설정하기
+    <bean id="noticeService" class="com.hoseok.web.service.jdbc.JDBCNoticeService">
+        <!-- DB연결정보 객체 DI -->
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <!-- 레퍼런스할 DataSource객체 -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://121.127.154.10:3306/hoseok" />
+        <property name="username" value="hoseok" />
+        <property name="password" value="!dlghtjr4948" />
+    </bean>
 
+	> 기존의 noticeService객체에 DI를 해야함
+	> 꽂기위한 Dependency로 dataSource이름의 DriverManagerDataSource를 생성해야 한다.
+	> dataSource는 JDBCNoticeService에서 제거한 Driver, URL, UID, PWD값을 setting 해야한다(setter)
+	> 이후 세팅된 dataSource를 JDBCNoticeService객체에 DI해 완료한다.
 
+* 다만 org.springframework.jdbc.datasource.DirverManagerDataSource 클래스를 이용하기 위해서는 라이브러리를 추가해야 한다.
+	> pom.xml에 Spring-JDBC 라이브러리를 추가한다.
 
-
-
-
-
-
-
+* 이렇게 DataSource를 분리해봤고 정상적으로 실행됨을 알 수 있다.
 
 
 

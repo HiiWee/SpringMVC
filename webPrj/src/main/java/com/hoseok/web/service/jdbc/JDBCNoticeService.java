@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import com.hoseok.web.entity.Notice;
 import com.hoseok.web.service.NoticeService;
 
@@ -18,11 +20,16 @@ import com.hoseok.web.service.NoticeService;
 public class JDBCNoticeService implements NoticeService{
 	// 공통적으로 사용하는 변수들은 따로 선언하여 사용
 	// sql 객체들은 매번 실행때마다 따로 가지고 있어야한다.
-	private String url = "jdbc:mysql://127.0.0.1:3306/hoseok";
-	private String uid = "hoseok";
-	private String pwd = "!dlghtjr4948";
-	private String driver = "com.mysql.cj.jdbc.Driver";	//SET MYSQL DRIVER
+//	private String url = "jdbc:mysql://127.0.0.1:3306/hoseok";
+//	private String uid = "hoseok";
+//	private String pwd = "!dlghtjr4948";
+//	private String driver = "com.mysql.cj.jdbc.Driver";
+	private DataSource dataSource;
 	
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
 	// 기본적으로 예외는 UI에서 처리하기 때문에 서비스에선 던진다.
 	public List<Notice> getList(int page, String field, String query) throws ClassNotFoundException, SQLException {
 
@@ -31,8 +38,12 @@ public class JDBCNoticeService implements NoticeService{
 		String sql = "select * from NOTICE_VIEW where "+ field +" like ? and rownum between ? and ?";
 		// field를 값을 세팅하듯 ?와 st.setString()을 이용해 값을 넣으면 양쪽에 홑따옴표 입력됨 'TITLE'
 		// 하지만 TITLE은 값이 아니므로 문자열 더하기를 이용한다.
-		Class.forName(driver);
-		Connection con = DriverManager.getConnection(url, uid, pwd);
+		//Class.forName(driver);
+		//Connection con = DriverManager.getConnection(url, uid, pwd);
+		
+		// DataSource를 이용한 Connection 만들기
+		Connection con = dataSource.getConnection();
+		
 		PreparedStatement st = con.prepareStatement(sql);
 		st.setString(1, "%" + query + "%");
 		st.setInt(2, start);
@@ -68,8 +79,12 @@ public class JDBCNoticeService implements NoticeService{
 		
 		String sql = "select COUNT(ID) count from notice where "+ field +" like ?";
 
-		Class.forName(driver);
-		Connection con = DriverManager.getConnection(url, uid, pwd);
+		//Class.forName(driver);
+		//Connection con = DriverManager.getConnection(url, uid, pwd);
+		
+		// DataSource를 이용한 Connection 만들기
+		Connection con = dataSource.getConnection();
+		
 		PreparedStatement st = con.prepareStatement(sql);
 		st.setString(1, "%" + query + "%");
 		ResultSet rs = st.executeQuery();
@@ -96,8 +111,13 @@ public class JDBCNoticeService implements NoticeService{
 		// 1. 자바는 사용자로부터 값을 입력받음 (콘솔, 외부, 윈도우, 파일 등등)
 		// 3. 위와같이 문장을 꽂아넣기에는 실수가 많이 발생할 우려
 		// 4. Statement에서 데이터를 문자열더하기가 아닌 꽂아넣을 수 있는 도구를 준다.
-		Class.forName(driver);
-		Connection con = DriverManager.getConnection(url, uid, pwd);
+		
+		//Class.forName(driver);
+		//Connection con = DriverManager.getConnection(url, uid, pwd);
+		
+		// DataSource를 이용한 Connection 만들기
+		Connection con = dataSource.getConnection();
+		
 		// Statement st = con.createStatement();
 		// ResultSet rs = st.executeQuery(sql);
 		// 5. 실행하기전에 ? 부분의 문자열을 채워준다.
@@ -127,8 +147,12 @@ public class JDBCNoticeService implements NoticeService{
 
 		String sql = "update notice set title = ?, content = ?, files=?" + "where id = ?";
 		
-		Class.forName(driver);
-		Connection con = DriverManager.getConnection(url, uid, pwd);
+		//Class.forName(driver);
+		//Connection con = DriverManager.getConnection(url, uid, pwd);
+		
+		// DataSource를 이용한 Connection 만들기
+		Connection con = dataSource.getConnection();
+		
 		PreparedStatement st = con.prepareStatement(sql);
 		
 		st.setString(1, title);
@@ -148,8 +172,12 @@ public class JDBCNoticeService implements NoticeService{
 
 		String sql = "delete from notice where id = ?";
 		
-		Class.forName(driver);
-		Connection con = DriverManager.getConnection(url, uid, pwd);
+		//Class.forName(driver);
+		//Connection con = DriverManager.getConnection(url, uid, pwd);
+		
+		// DataSource를 이용한 Connection 만들기
+		Connection con = dataSource.getConnection();
+		
 		PreparedStatement st = con.prepareStatement(sql);
 		
 		st.setInt(1, id);
