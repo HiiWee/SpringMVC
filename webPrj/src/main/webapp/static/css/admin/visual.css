@@ -3,10 +3,10 @@
 @import url("../sub-visual.css");
 
 #visual .content-container {
-	height: inherit;
-	display: flex;
-	align-items: center;
-	background: url("../../images/mypage/visual.png") no-repeat center;
+    height: inherit;
+    display: flex;
+    align-items: center;
+    background: url("../../images/mypage/visual.png") no-repeat center;
 }
 
 /* #visual .icon{
