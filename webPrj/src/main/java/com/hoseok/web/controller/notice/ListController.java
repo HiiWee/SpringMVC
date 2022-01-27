@@ -17,7 +17,7 @@ public class ListController implements Controller {
 
     @Override
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-      
+
         // ViewResolver를 이용해 경로를 간편하게 줄임
         // Tiles를 이용하기위해 notice/list -> notice.list로 변경
         ModelAndView mv = new ModelAndView("notice.list");
