@@ -9,10 +9,10 @@
 <link href="/css/customer/layout.css" type="text/css" rel="stylesheet" />
 <style>
 #visual .content-container {
-	height: inherit;
-	display: flex;
-	align-items: center;
-	background: url("../../images/customer/visual.png") no-repeat center;
+    height: inherit;
+    display: flex;
+    align-items: center;
+    background: url("../../images/customer/visual.png") no-repeat center;
 }
 </style>
 </head>
@@ -179,28 +179,18 @@
 
             </main>
             <script>
-													window
-															.addEventListener(
-																	"load",
-																	function() {
+			 window.addEventListener("load",function() {
+				var agreeButton = document.querySelector("form input[type='checkbox']");
+				var submitButton = document.querySelector("#submit-button");
+				submitButton.onclick = function(e) {
+					if (!agreeButton.checked) {
+						alert("약관에 동의하셔야만 합니다.");
+						e.preventDefault();
+					}
+				}
 
-																		var agreeButton = document
-																				.querySelector("form input[type='checkbox']");
-																		var submitButton = document
-																				.querySelector("#submit-button");
-
-																		submitButton.onclick = function(
-																				e) {
-
-																			if (!agreeButton.checked) {
-																				alert("약관에 동의하셔야만 합니다.");
-																				e
-																						.preventDefault();
-																			}
-																		}
-
-																	});
-												</script>
+			});
+			    </script>
 
 
         </div>
