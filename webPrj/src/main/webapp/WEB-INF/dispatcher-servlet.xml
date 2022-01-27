@@ -38,5 +38,5 @@
     <mvc:resources location="/static/" mapping="/**"></mvc:resources>
     
     <!-- NoticeService bean 생성(객체화 되어 IoC Container에 담겨지게 된다.) -->
-    <bean id="noticeService" class="com.hoseok.web.service.NoticeService" />
+    <bean id="noticeService" class="com.hoseok.web.service.jdbc.JDBCNoticeService" />
 </beans>
