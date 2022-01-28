@@ -918,7 +918,7 @@
 * 따라서 정해진 이름이 아닌 원하는 위치에 원하는 파일로 만들 수 있다.
 * 하나로 되어있는 파일을 여러개로 나누어 보자
 	> 여러개로 나뉘므로 폴더를 만들어 담자
-	>/WEB-INF/spring/ 경로를 생성해 기존의 HandlerMapping파일을 내용을 지우고 spring/아래에 3개를 복사한다.
+	>/WEB-INF/spring/ 경로를 생성해 기존의 dispatcher-servlet.xml파일을 내용을 지우고 spring/아래에 3개를 복사한다.
 
 * 3개의 파일들을 각각 아래와 같이 지정한다.
 	> servlet-context.xml : 서블릿과 관련된 설정 내용 담음
@@ -1067,7 +1067,7 @@
 * Service object DI 방식 부분 annotation으로 변경하기
 	> 우선 3개의 설정파일중 servlet-context.xml을 annotation으로 변경하기
 
-* servlet-context.xml에서 ListController부분 : <property name="noticeService" ref="noticeService" /> 로 DI하는 부분을 지우고 annotation으로 변경해보자
+* servlet-context.xml에서 ListController bean : <property name="noticeService" ref="noticeService" /> 로 DI하는 부분을 지우고 annotation으로 변경해보자
 	> ListController에서 setter위에 @Autowired를 작성함 (이런 작업은 소스코드를 수정할 수 있는 프로젝트에서만 가능)
 	     @Autowired
             public void setNoticeService(NoticeService noticeService) {
@@ -1089,9 +1089,9 @@
 	> 이 태그를 설정하면 @Required @Autowired @Resource @PostConstruct @PreDestroy @Configuration 기능을 각각 설정하지 않아도 된다.
 
 * @Autowired위치 
-	> setter 위, 필드 위 두곳 모두 가능하다
+	> setter, 필드, 생성자 모두 가능하다
 	> setter : DI말고 다른것도 수행하고 싶을때 이용 예를들어 setter내부에서 System.out.println()으로 콘솔에 출력한다던지
-	> 필드위 : 다른 수행할 수 있는 기능이없고 오직 DI만 auto로 해줌
+	> 필드 : 다른 수행할 수 있는 기능이없고 오직 DI만 auto로 해줌
 
 * 굳이 세팅외 다른것을 할 여지가 없다면 필드위에 어노테이션을 두고 setter쪽 어노테이션을 지우는것이 간결하고 좋아보임
 
