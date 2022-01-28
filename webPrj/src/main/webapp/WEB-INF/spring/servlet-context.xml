@@ -2,17 +2,23 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:context="http://www.springframework.org/schema/context"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/mvc
-        https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+        https://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
 
     <!-- 이곳에 mapping하는 URL은 실제 폴더나 파일이 존재하는 것이 아니라 이름의 역할 요청시 이 이름을 사용하게됨 -->
     <bean name="/index" class="com.hoseok.web.controller.IndexController" />
     
     <!-- ListController에 DI(setNoticeService) -->
     <bean name="/notice/list" class="com.hoseok.web.controller.notice.ListController">
-        <property name="noticeService" ref="noticeService"></property>
+        <!-- noticeService객체 DI annotation변 -->
+        <!-- <property name="noticeService" ref="noticeService"></property> -->
     </bean>
     <bean name="/notice/detail" class="com.hoseok.web.controller.notice.DetailController" />
 

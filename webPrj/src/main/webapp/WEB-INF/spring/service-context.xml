@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xmlns:mvc="http://www.springframework.org/schema/mvc" 
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:context="http://www.springframework.org/schema/context"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/mvc
-        https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+        https://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
 
+    <context:annotation-config/>
 
     <!-- NoticeService bean 생성(객체화 되어 IoC Container에 담겨지게 된다.) -->
     <bean id="noticeService" class="com.hoseok.web.service.jdbc.JDBCNoticeService">
         <!-- DB연결정보 객체 DI -->
-        <property name="dataSource" ref="dataSource" />
+        <!-- <property name="dataSource" ref="dataSource" /> -->
     </bean>
 
     <!-- 레퍼런스할 DataSource객체 -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
-        <property name="url" value="jdbc:mysql://127.0.0.1:3306/hoseok" />
-        <property name="username" value="hoseok" />
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/board" />
+        <property name="username" value="newone" />
         <property name="password" value="!dlghtjr4948" />
     </bean>
     

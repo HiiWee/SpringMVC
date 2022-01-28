@@ -1052,22 +1052,55 @@
 
 
 
+< ------------------------------------------------------------ 객체 DI 방식 annotation으로 변경하기 ------------------------------------------------------------ >
+* xml설정으로 되어있는 스프링 설정을 annotation으로 변경해보자
+	> 서비스 객체 사용시  xml에서 직접 DI 작업을 함
+	> 과거 방식에서 최근 스프링 사용방식으로 변경해보자
+
+* Spring을 떠나 Java application은 두 가지 방법으로 설정방식을 사용
+	1. xml파일을 이용해 외부 설정을 함
+	2. annotation을 사용해 설정
+
+	> 둘의 장단점이 있지만 Spring은 annotation과 Java설정으로 변경하려고 함
+	> 외부 텍스트 파일을 이용해도 더 경량화된 것을 사용함
+
+* Service object DI 방식 부분 annotation으로 변경하기
+	> 우선 3개의 설정파일중 servlet-context.xml을 annotation으로 변경하기
+
+* servlet-context.xml에서 ListController부분 : <property name="noticeService" ref="noticeService" /> 로 DI하는 부분을 지우고 annotation으로 변경해보자
+	> ListController에서 setter위에 @Autowired를 작성함 (이런 작업은 소스코드를 수정할 수 있는 프로젝트에서만 가능)
+	     @Autowired
+            public void setNoticeService(NoticeService noticeService) {
+                this.noticeService = noticeService;
+            }
+
+	> 이후 servlet-context.xml설정에 context namespace를 추가한다.
+	> xsi:schemaLocation에 http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd 를  추가하고
+	> xmlns:context에 http://www.springframework.org/schema/context 추가하면 context namespace를 이용할 수 있다.
+
+* 이후 <context:annotation-config /> 를 작성하면 실제로 소스코드에서 annotation을 찾아 동작한다.
+* context:annotation-config
+	> ApplicationContext 안에 이미 등록된 bean들의 Annotation을 활성화 하기 위해 사용된다.
+	> bean들이 XML로 등록됐는지 혹은 패키지 스캐닝을 통해 등록됐는지는 중요하지 않다.
+	> 이미 스프링 컨텍스트에 의해 생성되어 저장된 bean들에 대해서 @Autowired와 @Qualifier Annotation을 인식할 수 있다.
+	> component-scan 또한 같은 일을 할 수 있는데, context:annotation-config는 bean을 등록하는 작업을 하지 않는다.
+	> 즉, bean을 등록하기 위해 패키지를 안의 클래스를 스캔할 수 없다.
+	> 이 태그를 설정하면 @Required @Autowired @Resource @PostConstruct @PreDestroy @Configuration 기능을 각각 설정하지 않아도 된다.
+
+* @Autowired위치 
+	> setter 위, 필드 위 두곳 모두 가능하다
+	> setter : DI말고 다른것도 수행하고 싶을때 이용 예를들어 setter내부에서 System.out.println()으로 콘솔에 출력한다던지
+	> 필드위 : 다른 수행할 수 있는 기능이없고 오직 DI만 auto로 해줌
+
+* 굳이 세팅외 다른것을 할 여지가 없다면 필드위에 어노테이션을 두고 setter쪽 어노테이션을 지우는것이 간결하고 좋아보임
 
 
+* service-context.xml에서 DI annotation변경
+	> noticeService 빈에 dataSource를 DI하는 부분
+	> xml에서 context namespace설정과 context:annotation-config태그로 어노테이션을 이용함을 알려주고
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+	> 기존의 dataSource를 DI하는 property태그를 지우고 JDBCNoticeService.java에서 setter를 지우고 필드위에 @Autowired를 달아준다
 
 
 
