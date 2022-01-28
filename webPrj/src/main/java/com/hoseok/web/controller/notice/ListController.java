@@ -14,7 +14,13 @@ import com.hoseok.web.service.NoticeService;
 
 public class ListController implements Controller {
     
+    @Autowired
     private NoticeService noticeService;
+    //@Autowired로 자동 바인딩 되므로 Setter가 없어도 됨
+    //    @Autowired
+    //    public void setNoticeService(NoticeService noticeService) {
+    //        this.noticeService = noticeService;
+    //    }
 
     @Override
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -27,11 +33,6 @@ public class ListController implements Controller {
         List<Notice> list = noticeService.getList(1, "title", "");
         mv.addObject("list", list);
         return mv;
-    }
-    
-    @Autowired
-    public void setNoticeService(NoticeService noticeService) {
-        this.noticeService = noticeService;
     }
 
 }

@@ -29,10 +29,10 @@ public class JDBCNoticeService implements NoticeService {
 
     @Autowired
     private DataSource dataSource;
-    // autowired로 자동 바인딩 되므로 세터가 없어도 됨
-//    public void setDataSource(DataSource dataSource) {
-//        this.dataSource = dataSource;
-//    }
+    // @Autowired로 자동 바인딩 되므로 Setter가 없어도 됨
+    //    public void setDataSource(DataSource dataSource) {
+    //        this.dataSource = dataSource;
+    //    }
 
     // 기본적으로 예외는 UI에서 처리하기 때문에 서비스에선 던진다.
     public List<Notice> getList(int page, String field, String query) throws ClassNotFoundException, SQLException {
