@@ -14,11 +14,14 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.hoseok.web.entity.Notice;
 import com.hoseok.web.service.NoticeService;
 
 // CRUD를 담당하는 서비스 클래스
+@Service
 public class JDBCNoticeService implements NoticeService {
     // 공통적으로 사용하는 변수들은 따로 선언하여 사용
     // sql 객체들은 매번 실행때마다 따로 가지고 있어야한다.
