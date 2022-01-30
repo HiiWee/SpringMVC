@@ -10,10 +10,10 @@
         http://www.springframework.org/schema/context
         https://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:annotation-config/>
-
+    <!-- <context:annotation-config/> -->
+    <context:component-scan base-package="com.hoseok.web.controller"/>
     <!-- 이곳에 mapping하는 URL은 실제 폴더나 파일이 존재하는 것이 아니라 이름의 역할 요청시 이 이름을 사용하게됨 -->
-    <bean name="/index" class="com.hoseok.web.controller.IndexController" />
+    <!-- <bean name="/index" class="com.hoseok.web.controller.IndexController" /> -->
     
     <!-- ListController에 DI(setNoticeService) -->
     <bean name="/notice/list" class="com.hoseok.web.controller.notice.ListController">
@@ -42,5 +42,5 @@
     </bean>
     
     <mvc:resources location="/static/" mapping="/**"></mvc:resources>
-    
+    <mvc:annotation-driven />
 </beans>
