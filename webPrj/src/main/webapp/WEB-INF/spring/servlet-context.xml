@@ -16,11 +16,11 @@
     <!-- <bean name="/index" class="com.hoseok.web.controller.IndexController" /> -->
     
     <!-- ListController에 DI(setNoticeService) -->
-    <bean name="/notice/list" class="com.hoseok.web.controller.notice.ListController">
-        <!-- noticeService객체 DI annotation변 -->
-        <!-- <property name="noticeService" ref="noticeService"></property> -->
-    </bean>
-    <bean name="/notice/detail" class="com.hoseok.web.controller.notice.DetailController" />
+    <!-- <bean name="/notice/list" class="com.hoseok.web.controller.notice.ListController">
+        noticeService객체 DI annotation변
+        <property name="noticeService" ref="noticeService"></property>
+    </bean> -->
+    <!-- <bean name="/notice/detail" class="com.hoseok.web.controller.notice.DetailController" /> -->
 
     <!-- Tiles ViewResolver 설정 -->
     <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">

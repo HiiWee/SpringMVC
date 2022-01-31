@@ -5,12 +5,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 // 서블릿을 이용하지 않고 POJO클래스로 컨트롤러를 구성
 @Controller
-public class IndexController {
+public class HomeController {
     
     @RequestMapping("/index")
-    public void aaa() {
-        System.out.println("hello");
+    public String index() {
+        return "root.index";
     }
+
+    @RequestMapping("/help")
+    public void help() {
+        System.out.println("help");
+    }
+    
+    
     
 
 //    @Override
