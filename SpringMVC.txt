@@ -1227,6 +1227,184 @@
 
 
 
+< ------------------------------------------------------------ NoticeController 정리하기 ------------------------------------------------------------ >
+* 지난시간에 클래스가 아닌 메소드에 @RequestMapping을 이용해 URL을 매핑시킴 이때 컨트롤러를 만드는것이 애매해질 수 있다.
+	> 즉 실제적인 컨트롤러는 메소드가 된다.
+	> 그럼 메소드는 어떻게 정리하는것이 좋을지 생각해보자
+
+* 클래스 자체는 URL에 매핑되는것이 아님 따라서 하나의 클래스에 모든 컨트롤러를 다 만들수 있다.
+	> 만약 모든 컨트롤러(index, notice)를 한 클래스에 담게 되면? --> 개체수가 너무 많고 코드량이 길어져 관리의 어려움과 혀업의 어려움이 있다.
+	> 따라서 나누어서 만드는것이 적절
+		> notice와 관련된것은 떼어내고 notice에서 사용할 데이터 서비스도 떼어내고 notice관련된 내용을 모아서 하나의 파일을 만드는것이 바람직
+	> 분리하는것의 필요성은 느껴지나 구체적으로 어떻게 나누는것이 좋을까?
+
+* 분리하는것은 컨트롤러나 스프링 관련 내용이 아니라 물리아키텍처와 관련
+	> view내부에 파일을 만들때 어떻게 만드는것이 좋을지 고민하는 내용
+	  (html파일을 만드는 시점에 html파일의 구조를 어떻게 만들것인지에 대한 고민)
+	> 만약 현재 html파일 구조와 동일한 기준으로 구조를 잡았다 치면 이것을 기준으로 Controller를 생각해야함
+
+* WEB-INF/view/customer/notice/* 는 각각 notice의 목록을 보여주고, notice의 자세한 내용을 보여줌
+	> 즉 각각의 폴더들은 어떤 행위들을 가지고 있는 울타리(대상)이 된다.
+	> 대상들을 묶어줄 수 있는 단위로 class를 생성하면 된다. 그리고 기능이 있다면 메소드로 구현한다.
+	> customer/는 울타리에 해당되는것의 더 큰 울타리가 되므로 class가 아닌 package명으로 이용한다.
+	> root의 index.jsp는 RootController를 만들고 메소드로 컨트롤러를 만들면 된다.
+
+* NoticeController는 detail.jsp, list.jsp를 담당하는 컨트롤러를 메소드로 생성한다.
+	public Stirng list() {...}, public String detail() {...}
+
+* 현재는 @RequestMapping(Spring2.x~ 4.x까지 사용) 어노테이션을 사용하지만 후에 @GetMapping(최신의 방법)으로 변경할 것이다.
+	> mapping되는 URL들은 /notice/* 형식이다.
+	> 하지만 파일 구조는 /customer/notice/* 방식이다. 가능하면 파일구조와 URL구조를 맞춰주는 것이 좋음
+	  (나중에 파일구조로 URL구조를, URL구조로 파일구조를 알아볼때 편함)
+	> 따라서 /customer/notice/list, detail로 변경한다.
+
+* 각각의 컨트롤러가 객체화 되기 위해서는 클래스에 @Controller매핑을 해주어 Spring에서 @Controller를 보고 스캔하고 NoticeController를 객체화하고
+  객체화 되어야 @RequestMapping()정보를 확인할 수 있다.
+
+* 목록을 반환하는 컨트롤러들은 Model을 view에 전달해 데이터를 써야함
+	> 기존 컨트롤러에 있던 NoticeService(Notice를 다루는 컨트롤러들이 쓰는 공통 데이터 서비스) 필드를 가져온다. (@Autowired로 DI)
+	> 또한 List<Notice> 타입으로 service객체에서 목록을 받아오는 부분도 가져온다.
+	> 기존의 Notice 컨트롤러를 담당했던 클래스를 지운다
+	> 이후 dispatcher-servlet.xml에서 Controller설정파일들도 주석처리 한다.
+
+* 기존의 클래스 2개를 이용해 만들었던 컨트롤러들이 하나의 클래스에 2개의 메소드로 축소됨
+@Controller
+public class NoticeController {
+
+    @Autowired
+    private NoticeService noticeService;
+    
+    @RequestMapping("/customer/notice/list")
+    public String list() throws ClassNotFoundException, SQLException {
+        List<Notice> list = noticeService.getList(1, "title", "");
+        return "notice.list";
+    }
+
+    @RequestMapping("/customer/notice/detail")
+    public String detail() {
+        return "notice.detail";
+    }
+}
+
+* 실행하면 /customer/notice/list URL로 변경했으므로 jsp header도 수정을 요함 이후 실행하면 정상동작
+	> 아직 Model을 심지 않아서 게시물목록은 보이지 않음
+
+* @RequestMapping을 살펴보면 모든 URL에서 /customer/notice/가 사용된다 --> 공통분모
+	> /customer/notice/만 남겨두고 list, detail만 남겨둔다.
+
+* 이후 클래스에 @RequestMapping("/customer/notice/")으로 매핑한다.
+	> 이렇게 하게되면 클래스의 URL매핑이 메소드의 URL매핑과 결합되어 /customer/notice/list(detail)로 결합된다.
+	> 즉 경로격에 해당되는 공통 URL은 클래스에 한번만 @RequestMapping해주고 세부적인 페이지 URL은 메소드에 매핑하여 URL을 집중화 한다.
+	  (/index도 '/'을 집중화 하여 좀 더 간결하게 표현할 수 있다.)
+
+@Controller
+@RequestMapping("/customer/notice/")
+public class NoticeController {
+
+    @Autowired
+    private NoticeService noticeService;
+    
+    @RequestMapping("list")
+    public String list() throws ClassNotFoundException, SQLException {
+        List<Notice> list = noticeService.getList(1, "title", "");
+        return "notice.list";
+    }
+
+    @RequestMapping("detail")
+    public String detail() {
+        return "notice.detail";
+    }
+}
+
+* 최종적으로 위와같이 코드가 완성된다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
