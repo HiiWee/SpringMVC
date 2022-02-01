@@ -1322,11 +1322,45 @@ public class NoticeController {
 
 
 
+< ------------------------------------------------------------ 컨트롤러를 위한 Annotation 개념정리 ------------------------------------------------------------ >
+* xml로 설정할 때는 bean 태그를 이용해 URL과 Controller 클래스를 매핑시켜놓음
+* 이후 사용자 요청이 URL로 들어오면 이것을 수반하는 컨트롤러 클래스가 존재하고, 컨트롤러를 구현하고 있는 약속되어있는 인터페이스 함수를 구현함(사용자의 요구에 반응)
+	> 이 때 요청이 들어오고 컨트롤러가 실행되기전에 조율자가 있음 --> Front Controller(Spring이 제공하는 MVC라이브러리)
 
+* Front Controller는 사용자의 모든 요청을 몰아서 받고, 요청을 적절히 수행할 수 있는 컨트롤러를 찾아서 호출함
+	> Front Controller는 Servlet으로 만들어지게 되고, Controller는 POJO클래스(Spring이 제약한 인터페이스기반)로 만들어진다.
 
+* 이렇게 만들어 오다가 Annotation을 이용하는 방식으로 변경함
+	> 어노테이션 매핑은 클래스가 아닌 메소드에 붙이게됨
+	> 결국 클래스가 여러개 될 필요가 없다.
+	> 인터페이스를 수반하는 구현도 아니고 약속된 이름도 없다.
+	> 즉 매핑된 URL이 일치하면 일치하는 메소드를 실행한다.
+	> 따라서 URL매핑을 하나의 클래스로 묶어서 매핑함
 
+* Controller를 생성하기 위해 @Controller를 클래스에 붙여준다.
+	> 다만 Controller를 실제로 인식되고 객체화 되어야 하므로 어노테이션을 찾을수 있게 context:component-scan을 설정한다.
+	> component-scan은 클래스를 로드하고 객체화 하기위한 스캔이다.
+* URL매핑은 추가적인 설정이 필요함
+	> mvc:annotaion:driven을 설정하면 요청이 들어오면 수반됨
 
+* 컨트롤러 메소드의 이름은 딱히 중요하지 않지만 URL이름을 떠올릴수있는 이름 사용
+* 컨트롤러 메소드의 반환타입을 void로 두었을때 ViewResolver에 유무에 따라 다른 오류가 발생한다.
+	> ViewResolver가 있으면 TilesViewResolver가 아닌ViewResolver로 넘어간다 찾게되는것은 컨트롤러의 매핑주소를 이용하므로 WEB-INF파일에 직접 접근하므로 404오류가 발생한다.
+	> ViewResolver가 없으면 URL을 수반할 수 있는 view정보가 전혀 없으므로 500오류가 발생한다.
 
+* Front Controller은 재호출의 역할을 한다. 예시를 들어보자
+	> request "/index" 요청발생 (서블릿)
+	> service() 메소드 호출됨 (request, response인자 가짐)
+	> 이 메소드는 우리가 만든 메소드를 호출하게 된다. (method.invoke())
+	> 만약 URL매핑된 클래스를 찾을 수 없으면 response status 404를 반환한다.
+
+	> 반면에 설정되어 있는 컨트롤러에 URL매핑까지 되어있지만 반환 타입이 void인 경우를 보자
+	> method.invoke()로 Controller를 실행하지만 Controller가 void타입이므로 돌려받는 내용이 없다.
+	> 따라서 Controller가 없는건 아니고 돌려줄 내용이 없으므로 404 오류가 발생한다.
+	  (ResourceViewResolver가 설정되어 있다면 404가 아닌 500 에러 발생)
+
+* 반환 타입을 String으로 두게되면
+	> 불필요한 void보다 String으로 두면 Tiles에 View정보를 반환하고 TilesViewResolver가 뷰를 찾아서 실행하고 결과값으로 문서를 전달하게됨
 
 
 
