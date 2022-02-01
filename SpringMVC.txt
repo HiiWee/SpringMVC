@@ -1175,8 +1175,8 @@
 * 설정완료하고 실행
 	> IndexController를 실행하면 페이지도 출력되고 콘솔도 hello란 글자가 출력됨
 	> 또한 view정보를 전달하지 않고 void함수가 실행됐지만 RequestMapping의 URL을 가지고 ViewResolve작업을 실행한다.
-	  (일반 URL이므로 Tiles ViewResolver가 아닌 2순위 일반 ViewResolver 실행됨)
-	> 뷰리졸버의 동작확인을 위해 임의로 매핑을 aaa로 변경하면 URL기반으로 /WEB-INF/viwe/aaa.jsp를 못찾는다는 오류 발생(404)
+	  (일반 URL이므로 Tiles ViewResolver가 아닌 2순위 일반 ResourceViewResolver 실행됨)
+	> 뷰리졸버의 동작확인을 위해 임의로 매핑을 aaa로 변경하면 URL기반으로 /WEB-INF/view/aaa.jsp를 못찾는다는 오류 발생(404)
 	> 따라서 /index를 매핑하면 찾은 페이지가 있지만 Tiles설정을 인해 조각나 있으므로 main부분만 출력된다.
 
 * 요즘은 이런방식으로 이용, 다음시간에는 컨트롤러의 잘못된 이름을 변경해보자
@@ -1366,12 +1366,79 @@ public class NoticeController {
 
 
 
+< ------------------------------------------------------------ 문서 출력방법 4가지 ------------------------------------------------------------ >
+* 지난시간 URL매핑을 하기위한 방법을 알아봄
+	> URL매핑이 되었으면 그것과 관련된 컨트롤러의 자생방법이 달라짐 (출력하는 방법도 달라짐)
+* Spring을 이용해 문서를 출력하는 방법 4가지가 있다.
+	1. 서블릿 객체를 얻어서 문자열 출력하기
+	2. @ResponseBody 설정을 통한 문자열 출력하기
+	3. ResourceViewResolver를 이용한 문서 출력하기
+	4. TilesViewResolver를 이용한 문서 출력하기
+
+* 3, 4번은 지금까지 계속 다뤘음
+* 문서가 아닌 단순 문자열을 만들어 출력하고 싶으면 1번의 방법을 사용한다.
+* 1, 2번의 방법으로 출력하는 기본적인 방법을 알아보자
+
+@Controller
+@RequestMapping("/")
+public class HomeController {
+    
+    @RequestMapping("index")
+    public String index() {
+        return "root.index";
+    }
+    
+}
+* 지난시간까지의 컨트롤러는 위와같이 Tiles를 이용하거나, JSP문서를 viewResolver를 이용해 출력해봄
+
+1. 서블릿 객체를 얻어서 문자열 출력하기(ViewResolver없이)
+	* 가장 기본적인 1번방법인 서블릿 객체를 통한 문서출력방법을 알아보자
+		> 컨트롤러의 반환타입을 void로 변경한다. (resolver를 사용하지 않겠다는 의미)
+		> 서블릿의 출력도구인 HttpServletResponse를 이용한다.
+		> Front Controller를 통해 요청이 걸러서 오게되는데 이 때 호출하는 함수는 이름이 아닌 @RequestMapping의 주소를 보고 컨트롤러(메소드)를 호출한다.
+		> Front Controller는 함수명이 아닌 알맞은 @RequestMapping이 달린 함수를 invoke한다.(컨트롤러 메소드를 실행함)
+
+	* 컨트롤러의 매개인자 설정하기
+		> 이 떄 컨트롤러에 매개인자가 아무것도 없으면 FrontController에서 매개값을 주지 않고 그냥 호출하지만
+		> 컨트롤러에서 변수선언을 하게되면 FrontController가 Controller를 호출하기전 어떤 매개값이 있는지 확인하고
+		> 매개값을 FrontController가 제공할 수 있는지 확인하고 제공할 수 있으면 FrontController가 가진 객체의 참조를 전달한다.
+		> 컨트롤러의 인자를 알아서 체크하고 전달할 수 있으면 전달해준다.
+		> Controller에선 FrontController가 사용하는 똑같은 객체를 받으면서 그것을 이용해 출력을 할 수 있다.
+		  (HttpServletResponse response를 이용해 Writer를 받아와 출력)
+		> 따라서 Resolver를 통해 반환하지 않고 간단하게 문서를 출력할 수 있다.
+
+	* 결국 출력하는 값이 출력버퍼에 들어가기때문에 컨트롤러가 void를 반환해도 출력할 값을 채웠으므로 출력되게 된다.
+	  아래와 같이 실행하면 정상적으로 Hello Index가 출력된다. 이렇게 과거에 서블릿을 직접 이용했던것 처럼 필요한 도구가 있으면
+	  매개인자로 선언을 해주면 사용할 수 있다. 그렇게 되면 FrontController가 참조를 넘겨준다.
+	@Controller
+	@RequestMapping("/")
+	public class HomeController {
+    
+	    @RequestMapping("index")
+	    public void index(HttpServletResponse response) {
+	        PrintWriter out;
+	        try {
+	            out = response.getWriter();
+	            out.println("Hello Index");
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	        //return "root.index";
+	    }
+
+	}
 
 
+2. @ResponseBody 설정을 통한 문자열 출력하기(서블릿 객체를 이용한 출력보다 좀 더 간편하게 사용가능)
+	* 1번의 방법으로 서블릿 객체를 이용해 문서를 출력할 수 도 있지만 Spring은 좀 더 편하고 바람직한 기능을 제공한다.
+		> 우선 반환 타입을 String으로 두고 return으로 출력하길 원하는 문자열을 반환한다.
+		> 하지만 이렇게 그냥 두게되면 FrontController는 컨트롤러가 반환하는 것을 View라고 생각한다.
+		  (ViewResolver를 통해 page를 찾거나 tiles를 찾는 동작을 한다.)
+		> 따라서 반환하는 문자열 자체가 사용자에게 가길 원한다는것을 알려주기 위해 @ResponseBody 어노테이션을 붙여주면 된다.
+		  (즉, ViewResolver를 사용하지 말고 String 자체를 사용자에게 보내라는 의미)
+		> response라는 도구를 통해 텍스트만 출력하는것에 적합함
 
-
-
-
+* 사용자에게 출력하는 4가지 방법을 살펴보았다.(선택적으로 그때그때 사용할 수 있도록 잘 알자)
 
 
 
