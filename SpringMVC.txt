@@ -1662,12 +1662,37 @@ public class HomeController {
 
 
 
+< ------------------------------------------------------------ QueryString 입력 #2 : 변수명 별칭과 기본 값처리 ------------------------------------------------------------ >
+* 쿼리스트링으로 전달되는 값을 입력받는 방법 알아봄
+* 그렇다면 입력 받을때 변수명을 다르게 할 수 없을까?
+	> 변수명을 달리하는 방법과 값이 전달되지 않았을 경우 default값을 지정해보자
 
+* String p는 우리가 마음대로 하는것이 아닌 일종의 약속
+	> 쿼리스트링으로 전달되는 녀석의 p라는 것과 같은 이름으로 지정하면 스프링이 알아서 p의 값을 String p에 담아준다.
+	> 하지만 p가 아닌 다른 변수로 사용하고 싶을 수 있다.
+	> 쿼리스트링은 URL에 붙어있으므로 길이를 짧게하는것이 유리
+	> 코드내에서는 굳이 짧게 할 필요가 없다.
+	> p는 페이지를 나타내므로 이름을 살려 String page로 사용하길 원한다.
 
+* request " /list?p=1"과 public void list(String page)는 변수명이 일치하지 않게된다.
+	> Front Controller에서 검색시 String p = request.getParameter("page"); 로 검색하게 되므로 값을 심을 수 없게됨.
 
+* 따라서 Parameter를 가져올때 page가 아닌 p라는 값을 가져온다는것을 Spring에게 알려줘야 한다.
+	> @RequestParam("p") String page로 매개인자에 어노테이션을 붙이면 request할 때 가져올 수 있는 이름은 p라는 것을 지정해준다.
+	> 변수명을 풀네임을 사용가능하고 다른이름으로도 사용 할 수 있게된다.
 
+* 페이지를 처음 열 때는 쿼리스트링값이 없으므로 p값을 가져오지 못한다. (/customer/notice/list)
+	> Required String parameter 'p' is not present오류로 400 상태 발생
+	> @RequestParam은 p를 원하지만 파라미터를 전달하지 못해 null값이 들어오므로 오류가 생긴것
+	> 리스트는 기본적으로 1페이지가 default이므로 기본값 설정을 해주어야 한다.
+	> 자바는 default설정 미지원, Spring에서 지원함
 
+* @RequestParam의 다른 속성을 이용해 기본값을 지정할 수 있다.
+	> @RequestParam(name="p", defaultValue="1")
+	> 다만 여기서 주의할 사항은 파라미터로 오는 모든 값은 문자열이다.
+	> 정수형으로 변경하고싶으면 Parsing하거나 매개변수 자체의 자료형을 int로 변환하면 Spring이 문자열을 정수로 자동 변경해준다.(매우편리하네용)
 
+	 public String list(@RequestParam(name = "p", defaultValue = "1") int page)
 
 
 
