@@ -1,2 +1,2 @@
 # SpringMVC
-Styudy SpringMVC with using Maven
+Study SpringMVC with using Maven
