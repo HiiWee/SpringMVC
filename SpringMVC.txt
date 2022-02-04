@@ -1825,18 +1825,38 @@ public class HomeController {
 
 
 
+< ------------------------------------------------------------ POST 입력#3(체크박스와 라디오버튼 값 입력) ------------------------------------------------------------ >
+* 체크박스와 라디오박스 입력시 서버에서 값을 어떻게 입력받는지 알아보자
+                                <tr>
+                                    <th>좋아하는 음식</th>
+                                    <td class="text-align-left text-indent text-strong text-orange" colspan="3">
+                                        <input type="checkbox" name="foods" value="1" id="ch1"><label for="ch1">자장면</label>
+                                        <input type="checkbox" name="foods" value="2" id="ch2"><label for="ch1">짬뽕</label>
+                                        <input type="checkbox" name="foods" value="3" id="ch3"><label for="ch1">볶음밥</label>
+                                        <input type="checkbox" name="foods" value="4" id="ch4"><label for="ch1">탕수육</label>
+                                    </td>
+                                </tr>
+* 위와같은 체크박스에서 값을 식별하기 위한 name속성을 추가한다. 이는 getParameter("이 안에 들어가는 키값과 같다")
+	> 이후 실행하면 value값이 전달되는데 만약 name이 동일하다면 배열로 전달받을 수 있다.
+	> 만약 name값을 다르게 주면 Controller에도 그만큼의 매개인자가 추가됨으로써 불편해짐
+	> Controller에 콘솔출력문을 작성하고 실행
+	> 이후 체크하고 등록을 하면 해당 값에 맞는 value값이 콘솔에 출력된다.
+
+* 라디오버튼 : 체크박스와 달리 다중선택이 불가능 함
+	> 하지만 라디오버튼은 name이 같을경우에 하나의 그룹으로 인식되어 다중선택이 불가능하지만 name이 다르다면 다른 그룹으로 나뉘어 다중선택이 가능하다.
+	> 서버에 전송하면 배열이 아닌 하나의 String값으로 받아온다.
+                                <tr>
+                                    <th>가장 좋아하는 음식</th>
+                                    <td class="text-align-left text-indent text-strong text-orange" colspan="3">
+                                        <input type="radio" name="food" value="1" id="ch1"><label for="ch1">자장면</label>
+                                        <input type="radio" name="food" value="2" id="ch2"><label for="ch1">짬뽕</label>
+                                        <input type="radio" name="food" value="3" id="ch3"><label for="ch1">볶음밥</label>
+                                        <input type="radio" name="food" value="4" id="ch4"><label for="ch1">탕수육</label>
+                                    </td>
+                                </tr>
 
 
-
-
-
-
-
-
-
-
-
-
+* 체크박스가 아닌 일반적인 텍스트박스여도 name이 같은것이 2개이상이라면 배열로 받을 수 있다.
 
 
 
