@@ -1698,7 +1698,17 @@ public class HomeController {
 
 
 
+< ------------------------------------------------------------ @RequestParam Optional 속성 ------------------------------------------------------------ >
+* @RequestParam이 가진 옵션들에 대해 알아보자.
+	> defaultValue : 파라미터가 null일경우 기본 값
+	> name : 파라미터가 전달되고 있는 값의 별칭
+	> value : name 대신 사용가능 (동일한 역할이므로 name, value둘 중에 아무거나 써도 동일함, 다만 동시사용은 금함)
+	> required : 매개변수가 필요한지의 여부이다. (기본값을 true)
 
+* 쿼리스트링으로 값이 전달되지 않아 기본값을 설정하는 방법
+	1. name, defaultValue를 설정해 기본값 가짐
+	2. name, required=false로 두어 쿼리스트링의 null값을 그대로 매개변수에 전달(다만 int형은 null값을 받을 수 없으므로 String 혹은 Integer이용)
+	   이후 함수 내부에서 null값이 들어오면 따로 기본값으로 처리하는 로직을 구현한다.
 
 
 
