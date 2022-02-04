@@ -1714,8 +1714,60 @@ public class HomeController {
 
 
 
+< ------------------------------------------------------------ POST 입력을 위한 Admin 컨트롤러 추가하기 ------------------------------------------------------------ >
+* customer/notice/list는 사용자를 위한 페이지 이므로 등록이라는것이 없다 (단지 공지목록 보여줌)
+* 등록을 위한 컨트롤러 추가 : com.hoseok.web.controller.admin.board.NoticeController(관리자가 관리하는 내용이 Notice 뿐아니라 여러개이므로 board 패키지로 묶기)
+	> URL : /admin/board/notice/*
+	> 등록을 위한 컨트롤러는 아래 컨트롤러중 reg이다 (register)
+        @Controller
+        @RequestMapping("/admin/board/notice")
+        public class NoticeController {
+            
+            @RequestMapping("list")	: 공지사항출력
+            public String list() {
+                return "";
+            }
+            @RequestMapping("reg")	: 등록
+            public String reg() {
+                return "";
+            }
+            @RequestMapping("edit")	: 수정
+            public String edit() {
+                return "";
+            }
+            @RequestMapping("del")	: 삭제
+            public String del() {
+                return "";
+            }
+        }
 
+	> 아직은 View가 필요하지 않으므로 reg()에 사용자가 결과값을 볼 수 있게 @ResponseBody를 설정한다.
+	> 또한 어노테이션으로 클래스를 IoC Container에 담으면 묵시적으로 클래스명을 따라서 첫글자만 소문자가 되고 이름이 붙는다.
+	  기존에 사용자 컨트롤러에 noticeController가 존재하므로 이름을 명시적으로 붙여줘야 한다. (클래스문제가 아닌 bean name속성이 문제가됨)
 
+	> 실행하면 정상적으로 동작함
+	@Controller("adminNoticeController")
+        @RequestMapping("/admin/board/notice")
+        public class NoticeController {
+            
+            @RequestMapping("list")
+            public String list() {
+                return "";
+            }
+            @RequestMapping("reg")
+            @ResponseBody
+            public String reg() {
+                return "reg";
+            }
+            @RequestMapping("edit")
+            public String edit() {
+                return "";
+            }
+            @RequestMapping("del")
+            public String del() {
+                return "";
+            }
+        }
 
 
 
